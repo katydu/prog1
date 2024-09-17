@@ -2,7 +2,9 @@
 
 // Color constructor
 class Color {
-    constructor(r,g,b,a) {
+    
+        // Color constructor default opaque black
+    constructor(r=0,g=0,b=0,a=255) {
         try {
             if ((typeof(r) !== "number") || (typeof(g) !== "number") || (typeof(b) !== "number") || (typeof(a) !== "number"))
                 throw "color component not a number";
@@ -31,6 +33,7 @@ class Color {
                 throw "color component bigger than 255";
             else {
                 this.r = r; this.g = g; this.b = b; this.a = a; 
+                return(this);
             }
         } // end throw
         
@@ -38,13 +41,276 @@ class Color {
             console.log(e);
         }
     } // end Color change method
+    
+        // Color add method
+    add(c) {
+        try {
+            if (!(c instanceof Color))
+                throw "Color.add: non-color parameter";
+            else {
+                this.r += c.r; this.g += c.g; this.b += c.b; this.a += c.a;
+                return(this);
+            }
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+        }
+    } // end color add
+    
+        // Color subtract method
+    subtract(c) {
+        try {
+            if (!(c instanceof Color))
+                throw "Color.subtract: non-color parameter";
+            else {
+                this.r -= c.r; this.g -= c.g; this.b -= c.b; this.a -= c.a;
+                return(this);
+            }
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+        }
+    } // end color subgtract
+    
+        // Color scale method
+    scale(s) {
+        try {
+            if (typeof(s) !== "number")
+                throw "scale factor not a number";
+            else {
+                this.r *= s; this.g *= s; this.b *= s; this.a *= s; 
+                return(this);
+            }
+        } // end throw
+        
+        catch (e) {
+            console.log(e);
+        }
+    } // end Color scale method
+    
+        // Color copy method
+    copy(c) {
+        try {
+            if (!(c instanceof Color))
+                throw "Color.copy: non-color parameter";
+            else {
+                this.r = c.r; this.g = c.g; this.b = c.b; this.a = c.a;
+                return(this);
+            }
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+        }
+    } // end Color copy method
+    
+        // Color clone method
+    clone() {
+        var newColor = new Color();
+        newColor.copy(this);
+        return(newColor);
+    } // end Color clone method
+    
+        // translate color to string
+    toString() {
+        return(this.r +" "+ this.g +" "+ this.b +" "+ this.a);
+    }  // end Color toConsole
+    
+        // Send color to console
+    toConsole() {
+        console.log(this.toString());
+    }  // end Color toConsole
+    
 } // end color class
 
+// Vector class
+class Vector { 
+    constructor(x,y,z) {
+        this.set(x,y,z);
+    } // end constructor
+    
+    // sets the components of a vector
+    set(x,y,z) {
+        try {
+            if ((typeof(x) !== "number") || (typeof(y) !== "number") || (typeof(z) !== "number"))
+                throw "vector component not a number";
+            else
+                this.x = x; this.y = y; this.z = z; 
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+        }
+    } // end vector set
+    
+    // copy the passed vector into this one
+    copy(v) {
+        try {
+            if (!(v instanceof Vector))
+                throw "Vector.copy: non-vector parameter";
+            else
+                this.x = v.x; this.y = v.y; this.z = v.z;
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+        }
+    }
+    
+    toConsole(prefix="") {
+        console.log(prefix+"["+this.x+","+this.y+","+this.z+"]");
+    } // end to console
+    
+    // static dot method
+    static dot(v1,v2) {
+        try {
+            if (!(v1 instanceof Vector) || !(v2 instanceof Vector))
+                throw "Vector.dot: non-vector parameter";
+            else
+                return(v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+            return(NaN);
+        }
+    } // end dot static method
+    
+    // static cross method
+    static cross(v1,v2) {
+        try {
+            if (!(v1 instanceof Vector) || !(v2 instanceof Vector))
+                throw "Vector.cross: non-vector parameter";
+            else {
+                var crossX = v1.y*v2.z - v1.z*v2.y;
+                var crossY = v1.z*v2.x - v1.x*v2.z;
+                var crossZ = v1.x*v2.y - v1.y*v2.x;
+                return(new Vector(crossX,crossY,crossZ));
+            } // endif vector params
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+            return(NaN);
+        }
+    } // end dot static method
+    
+    // static add method
+    static add(v1,v2) {
+        try {
+            if (!(v1 instanceof Vector) || !(v2 instanceof Vector))
+                throw "Vector.add: non-vector parameter";
+            else
+                return(new Vector(v1.x+v2.x,v1.y+v2.y,v1.z+v2.z));
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+            return(new Vector(NaN,NaN,NaN));
+        }
+    } // end add static method
+
+    // static subtract method, v1-v2
+    static subtract(v1,v2) {
+        try {
+            if (!(v1 instanceof Vector) || !(v2 instanceof Vector))
+                throw "Vector.subtract: non-vector parameter";
+            else {
+                var v = new Vector(v1.x-v2.x,v1.y-v2.y,v1.z-v2.z);
+                return(v);
+            }
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+            return(new Vector(NaN,NaN,NaN));
+        }
+    } // end subtract static method
+
+    // static scale method
+    static scale(c,v) {
+        try {
+            if (!(typeof(c) === "number") || !(v instanceof Vector))
+                throw "Vector.scale: malformed parameter";
+            else
+                return(new Vector(c*v.x,c*v.y,c*v.z));
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+            return(new Vector(NaN,NaN,NaN));
+        }
+    } // end scale static method
+    
+    // static normalize method
+    static normalize(v) {
+        try {
+            if (!(v instanceof Vector))
+                throw "Vector.normalize: parameter not a vector";
+            else {
+                var lenDenom = 1/Math.sqrt(Vector.dot(v,v));
+                return(Vector.scale(lenDenom,v));
+            }
+        } // end try
+        
+        catch(e) {
+            console.log(e);
+            return(new Vector(NaN,NaN,NaN));
+        }
+    } // end scale static method
+    
+} // end Vector class
+
+class Camera {
+    constructor(eye, lookAt, viewUp, windowDist, windowWidth, windowHeight) {
+        this.eye = eye;   // Eye position
+        this.lookAt = lookAt; // Look-at vector
+        this.viewUp = viewUp; // View-up vector
+        this.windowDist = windowDist; // Distance from eye to the window
+        this.windowWidth = windowWidth;
+        this.windowHeight = windowHeight;
+        
+        // Calculate the camera basis vectors
+        this.w = Vector.subtract(eye, lookAt); // w points in the opposite direction of the view
+        this.w = Vector.normalize(this.w);
+        this.u = Vector.cross(viewUp, this.w); // u is perpendicular to both view-up and w
+        this.u = Vector.normalize(this.u);
+        this.v = Vector.cross(this.w, this.u); // v is perpendicular to u and w
+    }
+
+    // Converts 3D world coordinates to 2D screen coordinates
+    projectTo2D(worldCoord, canvasWidth, canvasHeight) {
+        let dir = Vector.subtract(worldCoord, this.eye);
+        let t = -Vector.dot(this.w, dir) / this.windowDist;
+        
+        let x = Vector.dot(this.u, dir) / this.windowWidth;
+        let y = Vector.dot(this.v, dir) / this.windowHeight;
+
+        // Convert to canvas coordinates
+        // set it into the center(0.5,0.5,0)
+        let screenX = (x + 0.5) * canvasWidth;
+        let screenY = (y + 0.5) * canvasHeight;
+
+        return {x: screenX, y: screenY};
+    }
+}
+
+// Create the camera with the given parameters
+let eye = new Vector(0.5, 0.5, -0.5);
+let lookAt = new Vector(0, 0, 1);
+let viewUp = new Vector(0, 1, 0);
+let windowDist = 0.5;
+let windowWidth = 2.0;
+let windowHeight = 2.0;
+let camera = new Camera(eye, lookAt, viewUp, windowDist, windowWidth, windowHeight);
 
 /* utility functions */
 
 // draw a pixel at x,y using color
 function drawPixel(imagedata,x,y,color) {
+    
     try {
         if ((typeof(x) !== "number") || (typeof(y) !== "number"))
             throw "drawpixel location not a number";
@@ -61,56 +327,225 @@ function drawPixel(imagedata,x,y,color) {
     } // end try
     
     catch(e) {
-        console.log(e);
+        drawPixel.numExcepts = (drawPixel.numExcepts == "undefined") ? 0 : drawPixel.numExcepts;
+        if (drawPixel.numExcepts++ < 10)
+            console.log(e);
     }
 } // end drawPixel
-    
-// draw random pixels
-function drawRandPixels(context) {
-    var c = new Color(0,0,0,0); // the color at the pixel: black
-    var w = context.canvas.width;
-    var h = context.canvas.height;
-    var imagedata = context.createImageData(w,h);
-    const PIXEL_DENSITY = 0.01;
-    var numPixels = (w*h)*PIXEL_DENSITY; 
-    
-    // Loop over 1% of the pixels in the image
-    for (var x=0; x<numPixels; x++) {
-        c.change(Math.random()*255,Math.random()*255,
-            Math.random()*255,255); // rand color
-        drawPixel(imagedata,
-            Math.floor(Math.random()*w),
-            Math.floor(Math.random()*h),
-                c);
-    } // end for x
-    context.putImageData(imagedata, 0, 0);
-} // end draw random pixels
 
-// get the input ellipsoids from the standard class URL
-function getInputEllipsoids() {
-    const INPUT_ELLIPSOIDS_URL = 
-        "https://ncsucgclass.github.io/prog1/ellipsoids.json";
+
+/* application functions */
+
+// interpolate and draw between two edges
+// draws only in the y range occupied by both edges
+// expects two edge parameters, each a two element array of vertex objects
+// vertex objects have this structure: {x:float,y:float,c:Color}
+function twoEdgeInterp(imagedata,e1,e2) {
+    
+    // create edge arrays for overlapping shared Y range
+    var e1new = [[],[]], e2new = [[],[]];
+    
+    // ensure vertex with min y is first in each edge
+    e1 = (e1[0].y < e1[1].y) ? e1 : e1.reverse(); 
+    e2 = (e2[0].y < e2[1].y) ? e2 : e2.reverse(); 
+    
+    // find starting endpoints of edges with overlapping shared Y range
+    var startYDiff = e1[0].y - e2[0].y;
+    if (startYDiff > 0) { // e1 has largest min Y
+        var startAtT = startYDiff/(e2[1].y - e2[0].y); // t at largest min Y
+        e1new[0].x = e1[0].x; // set X at largest min Y in overlapping e1
+        e1new[0].y = Math.ceil(e1[0].y); // set Y at largest min Y in overlapping e1
+        e1new[0].c = e1[0].c.clone();  // set color at largest min Y in overlapping e1
+        e2new[0].x = e2[0].x + (e2[1].x-e2[0].x) * startAtT; // set X in e2
+        e2new[0].y = e1new[0].y; // set Y at largest min Y in overlapping e2 (same as e1)
+        e2new[0].c = e2[1].c.clone().subtract(e2[0].c).scale(startAtT).add(e2[0].c);  // set color in e2
+    } else { // end if e1 largest min Y, begin e2 largest min Y
+        var startAtT = -startYDiff/(e1[1].y - e1[0].y); // t at largest min Y
+        e2new[0].x = e2[0].x; // set X at largest min Y in overlapping e2
+        e2new[0].y = Math.ceil(e2[0].y); // set Y at largest min Y in overlapping e2
+        e2new[0].c = e2[0].c.clone();  // set color at largest min Y in overlapping e2
+        e1new[0].x = e1[0].x + (e1[1].x-e1[0].x) * startAtT; // set X in e1
+        e1new[0].y = e2new[0].y; // set Y at largest min Y in overlapping e1 (same as e2)
+        e1new[0].c = e1[1].c.clone().subtract(e1[0].c).scale(startAtT).add(e1[0].c);  // set color in e1
+    } // end if e2 has largest min Y
+    
+    // find ending endpoints of edges with overlapping shared Y range
+    var endYDiff = e1[1].y - e2[1].y; 
+    if (endYDiff > 0) { // e1 has largest max Y
+        var endAtT = -endYDiff/(e1[0].y - e1[1].y); // t at largest min Y
+        e2new[1].x = e2[1].x; // set X at smallest max Y in e2
+        e2new[1].y = e2[1].y; // set Y at smallest max Y in e2
+        e2new[1].c = e2[1].c.clone(); // set color at smallest max Y in e2
+        e1new[1].x = e1[1].x + (e1[0].x-e1[1].x) * endAtT;
+        e1new[1].y = e2new[1].y; // set Y at smallest max Y in e1
+        e1new[1].c = e1[0].c.clone().subtract(e1[1].c).scale(endAtT).add(e1[1].c);  // set color in e1
+    } else { // end if e1 largest max Y, begin e2 largest max Y
+        var endAtT = endYDiff/(e2[0].y - e2[1].y); // t at largest min Y
+        e1new[1].x = e1[1].x; // set X at smallest max Y in e1
+        e1new[1].y = e1[1].y; // set Y at smallest max Y in e1
+        e1new[1].c = e1[1].c.clone(); // set color at smallest max Y in e1
+        e2new[1].x = e2[1].x + (e2[0].x-e2[1].x) * endAtT;
+        e2new[1].y = e1new[1].y; // set Y at smallest max Y in e2
+        e2new[1].c = e2[0].c.clone().subtract(e2[1].c).scale(endAtT).add(e2[1].c);  // set color in e2
+    } // end if e2 largest max Y
+    
+    // determine which overlapping edge is left, which is right
+    try {
+        const closeEnough = 0.000000001; // a billionth
+        var startXComp = e1new[0].x-e2new[0].x; 
+        startXComp = (Math.abs(startXComp) > closeEnough) ? startXComp : 0; 
+        var endXComp = e1new[1].x-e2new[1].x; 
+        endXComp = (Math.abs(endXComp) > closeEnough) ? endXComp : 0;
         
-    // load the ellipsoids file
-    var httpReq = new XMLHttpRequest(); // a new http request
-    httpReq.open("GET",INPUT_ELLIPSOIDS_URL,false); // init the request
-    httpReq.send(null); // send the request
-    var startTime = Date.now();
-    while ((httpReq.status !== 200) && (httpReq.readyState !== XMLHttpRequest.DONE)) {
-        if ((Date.now()-startTime) > 3000)
-            break;
-    } // until its loaded or we time out after three seconds
-    if ((httpReq.status !== 200) || (httpReq.readyState !== XMLHttpRequest.DONE)) {
-        console.log*("Unable to open input ellipses file!");
-        return String.null;
-    } else
-        return JSON.parse(httpReq.response); 
-} // end get input ellipsoids
+        switch(Math.sign(startXComp) + Math.sign(endXComp)) {
+            case -2: // both e1 endpoints are left of e2
+            case -1: // one e1 endpoint left of e2 (other at same loc)
+                var le = e1new, re = e2new; break;
+            case 0: // one endpoint left of e2, other right. Error!
+                throw "twoEdgeInterp: intersecting edges!"; break;
+            case 1: // one e1 endpoint right of e2 (other at same loc)
+            case 2: // both e1 endpoints are right of e2
+                var le = e2new, re = e1new; break;
+            default: // NaN or similar. Error!
+                throw "twoEdgeInterp: NaN or similar!";
+        } // end switch
+    } // end try
+    catch (e) {
+        console.error(e); return;
+    } // end catch
+    
+    // set up the vertical interpolation
+    var vDelta = 1 / (e1new[1].y-e1new[0].y); // norm'd vertical delta
+    var lcDelta = le[1].c.clone().subtract(le[0].c).scale(vDelta); // left vertical color delta
+    var rcDelta = re[1].c.clone().subtract(re[0].c).scale(vDelta); // right vertical color delta
+    var lxDelta = (le[1].x - le[0].x) * vDelta; // left vertical x delta
+    var rxDelta = (re[1].x - re[0].x) * vDelta; // right vertical x delta
+    var lx = le[0].x, rx = re[0].x; // init left/right x coord
+    var lc = le[0].c.clone(), rc = re[0].c.clone(); // init left/right color
+    
+    // do the interpolation
+    var hc = new Color(); // horizontal color
+    var hcDelta = new Color(); // horizontal color delta
+    for (var y=le[0].y; y<=le[1].y; y++) { // for each pixel row edges share
+        hc.copy(lc); // begin with the left color
+        hcDelta.copy(rc).subtract(lc).scale(1/(rx-lx)); // reset horiz color delta
+        for (var x=Math.ceil(lx); x<=rx; x++) { // for each pixel in row
+            drawPixel(imagedata,x,y,hc); // draw the color
+            hc.add(hcDelta); // set next pixel color
+        } // end horizontal
+        lx += lxDelta; // set next left edge x coord
+        rx += rxDelta; // set next right edge x coord
+        lc.add(lcDelta); // set next left edge color
+        rc.add(rcDelta); // set next right edge color
+    } // end vertical
+} // end twoEdgeInterp
+
+// fills the passed 2d convex polygon
+// expects an array of vertices, listed in clockwise order
+// vertex objects have this structure: {x:float,y:float,c:Color}
+function fillPoly(imagedata,vArray) {
+    
+    // sort the edges in the polygon by their min y coordinate
+    // next remove any horizontal edges
+    var minYList = vArray.map(function(vtx,idx,ary) { // create array of minY index pairs
+        return({minY:Math.min(vtx.y,vArray[(idx+1)%vArray.length].y), index:idx});
+    }); 
+    minYList.sort(function(e1,e2) { // sort array by minY
+        return(Math.sign(e1.minY-e2.minY));
+    });
+    var sortedNoHzEdges = minYList.filter(function (vtx,idx,ary) { // filter out horizontal edges
+        return(vArray[vtx.index].y !== vArray[(vtx.index+1)%vArray.length].y);
+    });
+
+    // move through sorted edges, interpolating between each minY pair
+    var e1 = 0, e2 = 1; // begin with first two edges (those that begin first/have min two Ys)
+    var e1v1, e1v2, e2v1, e2v2; // the vertices included in these two edges
+    while (e2<sortedNoHzEdges.length) { // for each polygon vertex index in sorted filtered list
+        
+        // set up the vertices in the current two edges
+        e1v1 = vArray[sortedNoHzEdges[e1].index];
+        e1v2 = vArray[(sortedNoHzEdges[e1].index+1)%vArray.length];
+        e2v1 = vArray[sortedNoHzEdges[e2].index];
+        e2v2 = vArray[(sortedNoHzEdges[e2].index+1)%vArray.length];
+        
+        // interpolate between the current two edges
+        twoEdgeInterp(imagedata,[e1v1,e1v2],[e2v1,e2v2]);
+        
+        // discard the edge that ends first, or both if they end at same Y
+        try {
+            switch (Math.sign(Math.max(e1v1.y,e1v2.y)-Math.max(e2v1.y,e2v2.y))) {
+                case -1: // e1 ends first
+                    e1 = e2; break; // discard e1, save e2
+                case 1: // e2 ends first
+                    break; // save e1, discard e2
+                case 0: // they end at same Y
+                    e2++; e1 = e2; break; // discard both edges
+                default: // something weird happened
+                    throw "fillPoly: odd endpoint Y comparison. NaN?";
+            } // end switch on which edge ends first
+            e2++; // add new second edge
+        } // end try
+        
+        catch (e) {
+            console.error(e);
+            break; // ... out of while loop
+        } // end catch
+    } // end for each polygon vertex index in sorted filtered list
+} // end fillPoly
+
+// projects the passed polygon using the passed viewing params
+// expects a convex poly, as an array of vertices in clockwise order
+// vertex objects have this structure: {x:float,y:float,z:float}
+// expects a view description with this structure: {eye:Vector,
+// at:Vector, up:Vector}. At is a vector, not a point.
+// assumes 90 deg fov, places centered plane at distance of 1.
+// returns altered x and y coords in vertex array
+function projectPoly(imagedata,poly,view) {
+    
+    var eyePointSlope; // slope eye to point
+    var denom, isectT; // denom of pixel t, t itself
+    var ctrToIsect; // pixel world xyz less plane center
+    
+    var planeCenter = Vector.add(view.eye,Vector.normalize(view.at));
+    var planeD = -Vector.dot(view.at,planeCenter);
+    var num = -Vector.dot(view.at,view.eye) - planeD; // num of pixel t
+    
+    var planeX = Vector.normalize(Vector.cross(view.up,view.at));
+    var planeY = Vector.normalize(Vector.cross(planeX,view.at));
+    
+    var w=imagedata.width, h=imagedata.height; // viewport size
+    
+    for (var v=0; v<poly.length; v++) { // for each poly vertex
+        eyePointSlope = Vector.subtract(new Vector(poly[v].x,poly[v].y,poly[v].z),view.eye);
+        denom = Vector.dot(view.at,eyePointSlope);
+        
+        try {
+            if (denom == 0) // no intersection
+                throw "projectPoly: one vertex doesn't intersect!";
+            else { // intersection
+                isectT = num / denom;
+                if (isectT < 0) // one vertex behind eye
+                    throw "one vertex behind eye!";
+                else { // intersecton in front of eye
+                    ctrToIsect = Vector.subtract(Vector.add(view.eye,Vector.scale(isectT,eyePointSlope)),planeCenter);
+                    poly[v].x = Vector.dot(planeX,ctrToIsect)*w/2 + w/2; // project and viewport transform
+                    poly[v].y = Vector.dot(planeY,ctrToIsect)*h/2 + h/2; // project onto planeY
+                } // end if intersection behind plane
+            } // end if intersects
+        } // end try
+        
+        catch (e) {
+            console.error(e);
+            poly = []; // no projected poly
+            break; 
+        } // end catch
+    } // end for each poly vertex
+} // end project poly
 
 //get the input triangles from the standard class URL
 function getInputTriangles() {
     const INPUT_TRIANGLES_URL = 
-        "https://ncsucgclass.github.io/prog1/triangles.json";
+        "https://ncsucgclass.github.io/prog1/triangles2.json";
         
     // load the triangles file
     var httpReq = new XMLHttpRequest(); // a new http request
@@ -126,365 +561,57 @@ function getInputTriangles() {
         return String.null;
     } else
         return JSON.parse(httpReq.response); 
-} // end get input triangles
-
-//get the input boxex from the standard class URL
-function getInputBoxes() {
-    const INPUT_BOXES_URL = 
-        "https://ncsucgclass.github.io/prog1/boxes.json";
-        
-    // load the boxes file
-    var httpReq = new XMLHttpRequest(); // a new http request
-    httpReq.open("GET",INPUT_BOXES_URL,false); // init the request
-    httpReq.send(null); // send the request
-    var startTime = Date.now();
-    while ((httpReq.status !== 200) && (httpReq.readyState !== XMLHttpRequest.DONE)) {
-        if ((Date.now()-startTime) > 3000)
-            break;
-    } // until its loaded or we time out after three seconds
-    if ((httpReq.status !== 200) || (httpReq.readyState !== XMLHttpRequest.DONE)) {
-        console.log*("Unable to open input boxes file!");
-        return String.null;
-    } else
-        return JSON.parse(httpReq.response); 
-} // end get input boxes
-
-// put random points in the ellipsoids from the class github
-function drawRandPixelsInInputEllipsoids(context) {
-    var inputEllipsoids = getInputEllipsoids();
-    var w = context.canvas.width;
-    var h = context.canvas.height;
-    var imagedata = context.createImageData(w,h);
-    const PIXEL_DENSITY = 0.1;
-    var numCanvasPixels = (w*h)*PIXEL_DENSITY; 
-    
-    if (inputEllipsoids != String.null) { 
-        var x = 0; var y = 0; // pixel coord init
-        var cx = 0; var cy = 0; // init center x and y coord
-        var ellipsoidXRadius = 0; // init ellipsoid x radius
-        var ellipsoidYRadius = 0; // init ellipsoid y radius
-        var numEllipsoidPixels = 0; // init num pixels in ellipsoid
-        var c = new Color(0,0,0,0); // init the ellipsoid color
-        var n = inputEllipsoids.length; // the number of input ellipsoids
-        //console.log("number of ellipses: " + n);
-
-        // Loop over the ellipsoids, draw rand pixels in each
-        for (var e=0; e<n; e++) {
-            cx = w*inputEllipsoids[e].x; // ellipsoid center x
-            cy = h*inputEllipsoids[e].y; // ellipsoid center y
-            ellipsoidXRadius = Math.round(w*inputEllipsoids[e].a); // x radius
-            ellipsoidYRadius = Math.round(h*inputEllipsoids[e].b); // y radius
-            numEllipsoidPixels = ellipsoidXRadius*ellipsoidYRadius*Math.PI; // projected ellipsoid area
-            numEllipsoidPixels *= PIXEL_DENSITY; // percentage of ellipsoid area to render to pixels
-            numEllipsoidPixels = Math.round(numEllipsoidPixels);
-            //console.log("ellipsoid x radius: "+ellipsoidXRadius);
-            //console.log("ellipsoid y radius: "+ellipsoidYRadius);
-            //console.log("num ellipsoid pixels: "+numEllipsoidPixels);
-            c.change(
-                inputEllipsoids[e].diffuse[0]*255,
-                inputEllipsoids[e].diffuse[1]*255,
-                inputEllipsoids[e].diffuse[2]*255,
-                255); // ellipsoid diffuse color
-            for (var p=0; p<numEllipsoidPixels; p++) {
-                do {
-                    x = Math.random()*2 - 1; // in unit square 
-                    y = Math.random()*2 - 1; // in unit square
-                } while (Math.sqrt(x*x + y*y) > 1) // a circle is also an ellipse
-                drawPixel(imagedata,
-                    cx+Math.round(x*ellipsoidXRadius),
-                    cy+Math.round(y*ellipsoidYRadius),c);
-                //console.log("color: ("+c.r+","+c.g+","+c.b+")");
-                //console.log("x: "+Math.round(w*inputEllipsoids[e].x));
-                //console.log("y: "+Math.round(h*inputEllipsoids[e].y));
-            } // end for pixels in ellipsoid
-        } // end for ellipsoids
-        context.putImageData(imagedata, 0, 0);
-    } // end if ellipsoids found
-} // end draw rand pixels in input ellipsoids
-
-// draw 2d projections read from the JSON file at class github
-function drawInputEllipsoidsUsingArcs(context) {
-    var inputEllipsoids = getInputEllipsoids();
-    
-    
-    if (inputEllipsoids != String.null) { 
-        var c = new Color(0,0,0,0); // the color at the pixel: black
-        var w = context.canvas.width;
-        var h = context.canvas.height;
-        var n = inputEllipsoids.length; 
-        //console.log("number of ellipsoids: " + n);
-
-        // Loop over the ellipsoids, draw each in 2d
-        for (var e=0; e<n; e++) {
-            context.fillStyle = 
-                "rgb(" + Math.floor(inputEllipsoids[e].diffuse[0]*255)
-                +","+ Math.floor(inputEllipsoids[e].diffuse[1]*255)
-                +","+ Math.floor(inputEllipsoids[e].diffuse[2]*255) +")"; // diffuse color
-            context.save(); // remember previous (non-) scale
-            context.scale(1, inputEllipsoids[e].b/inputEllipsoids[e].a); // scale by ellipsoid ratio 
-            context.beginPath();
-            context.arc(
-                Math.round(w*inputEllipsoids[e].x),
-                Math.round(h*inputEllipsoids[e].y),
-                Math.round(w*inputEllipsoids[e].a),
-                0,2*Math.PI);
-            context.restore(); // undo scale before fill so stroke width unscaled
-            context.fill();
-            //console.log(context.fillStyle);
-            //console.log("x: "+Math.round(w*inputEllipsoids[e].x));
-            //console.log("y: "+Math.round(h*inputEllipsoids[e].y));
-            //console.log("a: "+Math.round(w*inputEllipsoids[e].a));
-            //console.log("b: "+Math.round(h*inputEllipsoids[e].b));
-        } // end for ellipsoids
-    } // end if ellipsoids found
-} // end draw input ellipsoids
-
-//put random points in the triangles from the class github
-function drawRandPixelsInInputTriangles(context) {
-    var inputTriangles = getInputTriangles();
-    var w = context.canvas.width;
-    var h = context.canvas.height;
-    var imagedata = context.createImageData(w,h);
-    const PIXEL_DENSITY = 0.1;
-    var numCanvasPixels = (w*h)*PIXEL_DENSITY; 
-    
-    if (inputTriangles != String.null) { 
-        var x = 0; var y = 0; // pixel coord init
-        var cx = 0; var cy = 0; // init center x and y coord
-        var numTrianglePixels = 0; // init num pixels in triangle
-        var c = new Color(0,0,0,0); // init the triangle color
-        var n = inputTriangles.length; // the number of input files
-        //console.log("number of files: " + n);
-
-        // Loop over the triangles, draw rand pixels in each
-        for (var f=0; f<n; f++) {
-        	var tn = inputTriangles[f].triangles.length;
-        	//console.log("number of triangles in this files: " + tn);
-        	
-        	// Loop over the triangles, draw each in 2d
-        	for(var t=0; t<tn; t++){
-        		var vertex1 = inputTriangles[f].triangles[t][0];
-        		var vertex2 = inputTriangles[f].triangles[t][1];
-        		var vertex3 = inputTriangles[f].triangles[t][2];
-
-        		var vertexPos1 = inputTriangles[f].vertices[vertex1];
-        		var vertexPos2 = inputTriangles[f].vertices[vertex2];
-        		var vertexPos3 = inputTriangles[f].vertices[vertex3];
-        		//console.log("vertexPos1 " + vertexPos1);
-        		//console.log("vertexPos2 " + vertexPos2);
-        		//console.log("vertexPos3 " + vertexPos3);
-        		
-        		// triangle position on canvas
-        		
-        		var v1 = [w*vertexPos1[0], h*vertexPos1[1]];
-        		var v2 = [w*vertexPos2[0], h*vertexPos2[1]];
-        		var v3 = [w*vertexPos3[0], h*vertexPos3[1]];
-        		
-        		// calculate triangle area on canvas (shoelace formula)
-        		var triangleArea = 0.5*Math.abs(v1[0]*v2[1]+v2[0]*v3[1]+v3[0]*v1[1]-v2[0]*v1[1]-v3[0]*v2[1]-v1[0]*v3[1]);
-        		var numTrianglePixels = triangleArea; // init num pixels in triangle
-            	//console.log("triangle area " + triangleArea);
-            	numTrianglePixels *= PIXEL_DENSITY; // percentage of triangle area to render to pixels
-            	numTrianglePixels = Math.round(numTrianglePixels);
-            	// console.log("numTrianglePixels " + numTrianglePixels);
-            	c.change(
-            		inputTriangles[f].material.diffuse[0]*255,
-                	inputTriangles[f].material.diffuse[1]*255,
-                	inputTriangles[f].material.diffuse[2]*255,
-                	255); // triangle diffuse color
-            	for (var p=0; p<numTrianglePixels; p++) {
-                    var point; // on canvas plane
-            		var triangleTest = 0;
-            		while (triangleTest == 0 ){ //if the pixel outside the triangle
-                  
-            			point = [Math.floor(Math.random()*w), Math.floor(Math.random()*h)];
-                    	// plane checking
-            			
-                    	var t1 = ((point[0]-v2[0]) * (v1[1] - v2[1]) - (v1[0] - v2[0]) * (point[1] - v2[1])) < 0.0;
-                    	var t2 = ((point[0]-v3[0]) * (v2[1] - v3[1]) - (v2[0] - v3[0]) * (point[1] - v3[1])) < 0.0;
-                    	var t3 = ((point[0]-v1[0]) * (v3[1] - v1[1]) - (v3[0] - v1[0]) * (point[1] - v1[1])) < 0.0;
-                    	
-                    	if((t1==t2)&&(t2==t3)) // draw the pixel if inside the triangle
-                    		triangleTest = 1;
-            		}
-            		drawPixel(imagedata,point[0],point[1],c);
-                	//console.log("color: ("+c.r+","+c.g+","+c.b+")");
-                	//console.log("x: "+ x);
-                	//console.log("y: "+ y);
-            	} // end for pixels in triangle
-        	} // end for triangles
-    	} // end for files
-        context.putImageData(imagedata, 0, 0);
-    } // end if triangle file found
-} // end draw rand pixels in input triangles
+}
 
 //draw 2d projections traingle from the JSON file at class github
-function drawInputTrainglesUsingPaths(context) {
+function drawInputTrianglesUsingPaths(context) {
     var inputTriangles = getInputTriangles();
     
-    if (inputTriangles != String.null) { 
-        var c = new Color(0,0,0,0); // the color at the pixel: black
+    if (inputTriangles != String.null) {
         var w = context.canvas.width;
         var h = context.canvas.height;
-        var n = inputTriangles.length; 
-        //console.log("number of files: " + n);
+        var n = inputTriangles.length;
 
-        // Loop over the input files
-        for (var f=0; f<n; f++) {
-        	var tn = inputTriangles[f].triangles.length;
-        	//console.log("number of triangles in this files: " + tn);
-        	
-        	// Loop over the triangles, draw each in 2d
-        	for(var t=0; t<tn; t++){
-        		var vertex1 = inputTriangles[f].triangles[t][0];
-        		var vertex2 = inputTriangles[f].triangles[t][1];
-        		var vertex3 = inputTriangles[f].triangles[t][2];
+        for (var f = 0; f < n; f++) {
+            var tn = inputTriangles[f].triangles.length;
 
-        		var vertexPos1 = inputTriangles[f].vertices[vertex1];
-        		var vertexPos2 = inputTriangles[f].vertices[vertex2];
-        		var vertexPos3 = inputTriangles[f].vertices[vertex3];
-        		//console.log("vertexPos1 " + vertexPos1);
-        		//console.log("vertexPos2 " + vertexPos2);
-        		//console.log("vertexPos3 " + vertexPos3);
-        		
-            	context.fillStyle = 
-            	    "rgb(" + Math.floor(inputTriangles[f].material.diffuse[0]*255)
-            	    +","+ Math.floor(inputTriangles[f].material.diffuse[1]*255)
-            	    +","+ Math.floor(inputTriangles[f].material.diffuse[2]*255) +")"; // diffuse color
-            
-            	var path=new Path2D();
-            	path.moveTo(w*vertexPos1[0],h*vertexPos1[1]);
-            	path.lineTo(w*vertexPos2[0],h*vertexPos2[1]);
-            	path.lineTo(w*vertexPos3[0],h*vertexPos3[1]);
-            	path.closePath();
-            	context.fill(path);
+            for (var t = 0; t < tn; t++) {
+                var vertex1 = inputTriangles[f].triangles[t][0];
+                var vertex2 = inputTriangles[f].triangles[t][1];
+                var vertex3 = inputTriangles[f].triangles[t][2];
 
-        	} // end for triangles
-        } // end for files
-    } // end if triangle files found
-} // end draw input triangles
+                var vertexPos1 = inputTriangles[f].vertices[vertex1];
+                var vertexPos2 = inputTriangles[f].vertices[vertex2];
+                var vertexPos3 = inputTriangles[f].vertices[vertex3];
 
-// put random points in the boxes from the class github
-function drawRandPixelsInInputBoxes(context) {
-    var inputBoxes = getInputBoxes();
-    var w = context.canvas.width;
-    var h = context.canvas.height;
-    var imagedata = context.createImageData(w,h);
-    const PIXEL_DENSITY = 0.1;
-    var numCanvasPixels = (w*h)*PIXEL_DENSITY; 
-    
-    if (inputBoxes != String.null) { 
-	    var x  = 0; var y  = 0; // pixel coord init
-        var lx = 0; var rx = 0; // input lx, rx from boxes.json
-        var by = 0; var ty = 0; // input by, ty from boxes.json
-        var fz = 0; var rz = 0; // input fz, rz from boxes.json
-        var numBoxPixels = 0; // init num pixels in boxes
-        var c = new Color(0,0,0,0); // init the box color
-        var n = inputBoxes.length; // the number of input boxes
-        //console.log("number of ellipses: " + n);
+                // Project world coordinates to 2D screen coordinates
+                var proj1 = camera.projectTo2D(new Vector(vertexPos1[0], vertexPos1[1], vertexPos1[2]), w, h);
+                var proj2 = camera.projectTo2D(new Vector(vertexPos2[0], vertexPos2[1], vertexPos2[2]), w, h);
+                var proj3 = camera.projectTo2D(new Vector(vertexPos3[0], vertexPos3[1], vertexPos3[2]), w, h);
 
-        // Loop over the ellipsoids, draw rand pixels in each
-        for (var b=0; b<n; b++) {
-			// input lx,rx,by,ty on canvas
-			lx = w*inputBoxes[b].lx;
-			rx = w*inputBoxes[b].rx;
-			by = h*inputBoxes[b].by;
-			ty = h*inputBoxes[b].ty;           
-			
-            numBoxesPixels  = (rx-lx)*(ty-by); // projected box area 
-            numBoxesPixels *= PIXEL_DENSITY;  // percentage of box area to render to pixels
-            numBoxesPixels  = Math.round(numBoxesPixels);
-           
-            //console.log("num box pixels: "+numBoxesPixels);
-            
-			c.change(
-                inputBoxes[b].diffuse[0]*255,
-                inputBoxes[b].diffuse[1]*255,
-                inputBoxes[b].diffuse[2]*255,
-                255); // box diffuse color
-            for (var p=0; p<numBoxesPixels; p++) {
-                do {
-                    x = Math.floor(Math.random()*w); 
-                    y = Math.floor(Math.random()*h); 
-                } while ( x<lx || x>rx || y>ty || y<by ) // inside the projection
-                drawPixel(imagedata,x,y,c);
-                //console.log("color: ("+c.r+","+c.g+","+c.b+")");
-                //console.log("x: " + x);
-                //console.log("y: " + y);
-            } // end for pixels in box
-        } // end for boxes
-        context.putImageData(imagedata, 0, 0);
-    } // end if boxes found
-} // end draw rand pixels in input boxes
+                context.fillStyle = `rgb(${Math.floor(inputTriangles[f].material.diffuse[0] * 255)}, 
+                                        ${Math.floor(inputTriangles[f].material.diffuse[1] * 255)}, 
+                                        ${Math.floor(inputTriangles[f].material.diffuse[2] * 255)})`;
 
-//draw 2d projections boxes from the JSON file at class github
-function drawInputBoxesUsingPaths(context) {
-    var inputBoxes = getInputBoxes();
-    var n = inputBoxes.length; // the number of input boxes
-	
-    if (inputBoxes != String.null) { 
-		var w = context.canvas.width;
-        var h = context.canvas.height;
-        var c = new Color(0,0,0,0); // the color at the pixel: black
-        var x  = 0; var y  = 0; // pixel coord init
-        var lx = 0; var rx = 0; // input lx, rx from boxes.json
-        var by = 0; var ty = 0; // input by, ty from boxes.json
-        var fz = 0; var rz = 0; // input fz, rz from boxes.json
-        //console.log("number of files: " + n);
-
-        // Loop over the input files
-        for (var b=0; b<n; b++) {
-				
-			// input lx,rx,by,ty on canvas
-			lx = w*inputBoxes[b].lx;
-			rx = w*inputBoxes[b].rx;
-			by = h*inputBoxes[b].by;
-			ty = h*inputBoxes[b].ty; 
-        		
-            context.fillStyle = 
-            	"rgb(" + Math.floor(inputBoxes[b].diffuse[0]*255)
-            	+","+ Math.floor(inputBoxes[b].diffuse[1]*255)
-            	+","+ Math.floor(inputBoxes[b].diffuse[2]*255) +")"; // diffuse color
-            
-            var path=new Path2D();
-            path.moveTo(lx,ty);
-            path.lineTo(lx,by);
-            path.lineTo(rx,by);
-			path.lineTo(rx,ty);
-            path.closePath();
-            context.fill(path);
-
-        } // end for files
-    } // end if box files found
-} // end draw input boxes
+                var path = new Path2D();
+                path.moveTo(proj1.x, proj1.y);
+                path.lineTo(proj2.x, proj2.y);
+                path.lineTo(proj3.x, proj3.y);
+                path.closePath();
+                context.fill(path);
+            }
+        }
+    }
+}
 
 /* main -- here is where execution begins after window load */
 
 function main() {
 
-    // Get the canvas and context
-    var canvas = document.getElementById("viewport"); 
+    // Get the canvas, context, and image data
+    var canvas = document.getElementById("viewport");
     var context = canvas.getContext("2d");
- 
-    // Create the image
-    //drawRandPixels(context);
-      // shows how to draw pixels
-    
-    //drawRandPixelsInInputEllipsoids(context);
-      // shows how to draw pixels and read input file
-      
-    //drawInputEllipsoidsUsingArcs(context);
-      // shows how to read input file, but not how to draw pixels
-    
-    drawRandPixelsInInputTriangles(context);
-      // shows how to draw pixels and read input file
-    
-    //drawInputTrainglesUsingPaths(context);
-      // shows how to read input file, but not how to draw pixels
-    
-    //drawRandPixelsInInputBoxes(context);
-      // shows how to draw pixels and read input file
-    
-    //drawInputBoxesUsingPaths(context);
-      // shows how to read input file, but not how to draw pixels
+    context.fillStyle = "black";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    drawInputTrianglesUsingPaths(context);
 }
